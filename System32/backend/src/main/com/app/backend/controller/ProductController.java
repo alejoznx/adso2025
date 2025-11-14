@@ -2,8 +2,9 @@ package com.app.backend.controller;
 
 import com.app.backend.model.Product;
 import com.app.backend.service.ProductService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import com.app.backend.dto.MessageResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -12,49 +13,52 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
+@CrossOrigin(origins = "*")
 public class ProductController {
 
-    private final ProductService productService;
-
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
+    @Autowired
+    private ProductService productService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<List<Product>> listAll() {
-        List<Product> list = productService.findAll();
-        return ResponseEntity.ok(list);
+    @PreAuthorize("hasAnyRole('ADMIN', 'COORDINADOR')")
+    public ResponseEntity<List<Product>> getAllProducts() {
+        return ResponseEntity.ok(productService.findAll());
+    }
+
+    @GetMapping("/category/{categoryId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COORDINADOR')")
+    public ResponseEntity<List<Product>> getProductsByCategoryId(@PathVariable Long categoryId) {
+        return ResponseEntity.ok(productService.findByCategoryId(categoryId));
+    }
+
+    @GetMapping("/subcategory/{subCategoryId}")
+    @PreAuthorize("hasAnyRole('ADMIN' , 'COORDINADOR')")
+    public ResponseEntity<List<Product>> getProductsBySubCategoryId(@PathVariable Long subCategoryId) {
+        return ResponseEntity.ok(productService.findBySubCategoryId(subCategoryId));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<Product> getById(@PathVariable Long id) {
-        return productService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @PreAuthorize("hasAnyRole('ADMIN' , 'COORDINADOR')")
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.findById(id));
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Product> create(@Valid @RequestBody Product product) {
-        Product created = productService.save(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    @PreAuthorize("hasAnyRole('ADMIN' , 'COORDINADOR')")
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+        return ResponseEntity.ok(productService.create(product));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Product> update(@PathVariable Long id, @Valid @RequestBody Product product) {
-        return productService.update(id, product)
-                .map(p -> ResponseEntity.ok(p))
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+    @PreAuthorize("hasAnyRole('ADMIN' , 'COORDINADOR')")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
+        return ResponseEntity.ok(productService.update(id, product));
+    }   
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        boolean deleted = productService.deleteById(id);
-        if (deleted) return ResponseEntity.noContent().build();
+    @DeleteMapping(value ="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<MessageResponse> deleteProduct(@PathVariable Long id) {
+        productService.delete(id);
         return ResponseEntity.ok(new MessageResponse("Producto eliminado exitosamente"));
     }
-}
+};

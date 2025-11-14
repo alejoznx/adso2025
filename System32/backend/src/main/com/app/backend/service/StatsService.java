@@ -1,8 +1,8 @@
 package com.app.backend.service;
 
 import com.app.backend.repository.UserRepository;
-import org.app.backend.repository.CategoryRepository;
-import com.app.backend.repository.SubcategoryRepository;
+import com.app.backend.repository.CategoryRepository;
+import com.app.backend.repository.SubCategoryRepository;
 import com.app.backend.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class StatsService {
     private CategoryRepository categoryRepository;
 
     @Autowired
-    private SubcategoryRepository subcategoryRepository;
+    private SubCategoryRepository subcategoryRepository;
 
     @Autowired
     private ProductRepository productRepository;

@@ -1,7 +1,7 @@
 
 package com.app.backend.service;
 
-import com.app.backend.model.SubCategory;
+import com.app.backend.model.Subcategory;
 import com.app.backend.repository.SubCategoryRepository;
 import com.app.backend.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,30 +12,31 @@ import java.util.List;
 @Service
 public class SubCategoryService {
 
-    private  SubCategoryRepository subCategoryRepository;
+    @Autowired
+    private SubCategoryRepository subCategoryRepository;
 
     @Autowired 
     public CategoryRepository categoryRepository;
     
 
-    public List<SubCategory> findAll() {
+    public List<Subcategory> findAll() {
         return subCategoryRepository.findAll();
     }
 
-    public List<SubCategory> findByCategoryId(Long categoryId) {
+    public List<Subcategory> findByCategoryId(Long categoryId) {
         return subCategoryRepository.findByCategoryId(categoryId);
     }
 
-    public SubCategory findById(Long id) {
+    public Subcategory findById(Long id) {
+        return subCategoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Subcategoria no encontrada"));
+    }
+
+    public Subcategory create(Subcategory subCategory) {
         return subCategoryRepository.save(subCategory);
     }
 
-    public SubCategory create(SubCategory subCategory) {
-        return subCategoryRepository.save(subCategory);
-    }
-
-    public SubCategory update(Long id, SubCategory subCategoryDetails) {
-        SubCategory subCategory = findById(id);
+    public Subcategory update(Long id, Subcategory subCategoryDetails) {
+        Subcategory subCategory = findById(id);
         subCategory.setName(subCategoryDetails.getName());
         subCategory.setDescription(subCategoryDetails.getDescription());
         subCategory.setCategory(subCategoryDetails.getCategory());
@@ -43,10 +44,9 @@ public class SubCategoryService {
     }
 
     public void delete(Long id) {
-        SubCategory subCategory = findById(id);
+        Subcategory subCategory = findById(id);
         subCategoryRepository.delete(subCategory);
     }
 }
-
 
         

@@ -2,7 +2,7 @@ package com.app.backend.dto;
 
 import com.app.backend.model.User;
 
-public class LoginResponse {
+public class UserCreateRequest {
     private String username;
     private String password;
     private String email;

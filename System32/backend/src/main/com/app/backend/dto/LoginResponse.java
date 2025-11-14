@@ -18,7 +18,7 @@ public class LoginResponse {
         this.id = user.getId();
         this.username = user.getUsername();
         this.email = user.getEmail();
-        this.role = user.getRole();
+        this.role = user.getRole().name();
     }
 
     public String getToken() {

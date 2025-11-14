@@ -17,16 +17,20 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public List<Product> findBySubCategoryId(Long categoryId) {
-        return productRepository.findBySubCategoryId(categoryId);
+    public List<Product> findByCategoryId(Long categoryId) {
+        return productRepository.findByCategoryId(categoryId);
     }
 
-     public List<Product> findBySubCategoryId(Long subCategoryId) {
-        return productRepository.findBySubCategoryId(subCategoryId);
+    public List<Product> findBySubCategoryId(Long subCategoryId) {
+        return productRepository.findBySubcategoryId(subCategoryId);
     }
 
     public Product findById(Long id) {
         return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Producto no encontrado: "));
+    }
+
+    public Product create(Product product) {
+        return productRepository.save(product);
     }
 
     public Product update(Long id, Product productDetails) {
@@ -35,8 +39,8 @@ public class ProductService {
         product.setDescription(productDetails.getDescription());
         product.setPrice(productDetails.getPrice());
         product.setStock(productDetails.getStock());
-        product.setActive(productDetails.getActive());
-        product.setSubCategory(productDetails.getSubCategory());
+        product.setActive(productDetails.isActive());
+        product.setSubcategory(productDetails.getSubcategory());
         return productRepository.save(product);
     }
 

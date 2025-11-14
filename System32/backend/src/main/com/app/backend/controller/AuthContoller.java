@@ -1,7 +1,7 @@
 package com.app.backend.controller;
 
-import com.app.backend.dto.loginRequest;
-import com.app.backend.dto.loginResponse;
+import com.app.backend.dto.LoginRequest;
+import com.app.backend.dto.LoginResponse;
 import com.app.backend.model.User;
 import com.app.backend.repository.UserRepository;
 import com.app.backend.security.JwtTokenProvider;
@@ -28,7 +28,7 @@ public class AuthContoller {
     private UserRepository userRepository;
 
     @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> login(@RequestBody loginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
       try {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -43,7 +43,7 @@ public class AuthContoller {
         User user = userRepository.findByUsername(loginRequest.getUsername())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        return ResponseEntity.ok(new loginResponse(jwt, user));
+        return ResponseEntity.ok(new LoginResponse(jwt, user));
       } catch (Exception e) {
           return ResponseEntity.badRequest().body("{\"error\": \"credenciales inválidas\"}");
       }

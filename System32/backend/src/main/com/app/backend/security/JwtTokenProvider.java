@@ -1,7 +1,7 @@
 package  com.app.backend.security;
 
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.keys;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -17,40 +17,38 @@ public class JwtTokenProvider{
     private long jwtExpiration;
 
     private SecretKey getSigningKey(){
-        return keys.hmacShakeyFor(jwtSecret.getBytes());
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
     public String generateToken(Authentication authentication){
-        String usernamer = authentication.getName();
+        String username = authentication.getName();
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
-        return jwts.builder()
-        .subject(username)
-        .issuedAt(now)
-        .expiration(expiryDate)
+        return Jwts.builder()
+        .setSubject(username)
+        .setIssuedAt(now)
+        .setExpiration(expiryDate)
         .signWith(getSigningKey())
         .compact();
 
     }
 
     public String getUsernameFromToken(String token){
-        Claim claims = Jwts.parser()
-        .verify(getSigningKey())
-        .builder()
-        .parseSignedClaims(token)
-        -getPayload();
+        Claims claims = Jwts.parser()
+        .setSigningKey(getSigningKey())
+        .parseClaimsJws(token)
+        .getBody();
 
         return claims.getSubject();
     }
 
-    public boolean vakudateToken(String authToken){
+    public boolean validateToken(String authToken){
         try{
-            jwts.parser()
-            .verifyWith(getSigningKey())
-            .build()
-            .parseSignedClaims(authToken);
+            Jwts.parser()
+            .setSigningKey(getSigningKey())
+            .parseClaimsJws(authToken);
             return true;
-        }   catch (jwtException | IllegaArgumentExeption e){
+        }   catch (JwtException | IllegalArgumentException e){
             return false;
         }
     }

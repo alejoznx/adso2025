@@ -1,6 +1,6 @@
 package com.app.backend.dto;
 
-public class LoginRequest() {
+public class LoginRequest {
     private String username;
     private String password;
     
