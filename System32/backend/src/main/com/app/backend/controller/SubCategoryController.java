@@ -19,31 +19,31 @@ public class SubCategoryController {
     private SubCategoryService subCategoryService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN' , 'COORDINADOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COORDINADOR')")
     public ResponseEntity<List<Subcategory>> getAllSubCategories() {
         return ResponseEntity.ok(subCategoryService.findAll());
     }
 
     @GetMapping("/category/{categoryId}")
-    @PreAuthorize("hasRole('ADMIN' , 'COORDINADOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COORDINADOR')")
     public ResponseEntity<List<Subcategory>> getSubCategoriesByCategoryId(@PathVariable Long categoryId) {
         return ResponseEntity.ok(subCategoryService.findByCategoryId(categoryId));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN' , 'COORDINADOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COORDINADOR')")
     public ResponseEntity<Subcategory> getSubCategoryById(@PathVariable Long id) {
         return ResponseEntity.ok(subCategoryService.findById(id));
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN' , 'COORDINADOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COORDINADOR')")
     public ResponseEntity<Subcategory> createSubCategory(@RequestBody Subcategory subcategory) {
         return ResponseEntity.ok(subCategoryService.create(subcategory));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN' , 'COORDINADOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COORDINADOR')")
     public ResponseEntity<Subcategory> updateSubCategory(@PathVariable Long id, @RequestBody Subcategory subcategory) {
         return ResponseEntity.ok(subCategoryService.update(id, subcategory));
     }

@@ -56,7 +56,7 @@ public class ProductController {
     }   
 
     @DeleteMapping(value ="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MessageResponse> deleteProduct(@PathVariable Long id) {
         productService.delete(id);
         return ResponseEntity.ok(new MessageResponse("Producto eliminado exitosamente"));
